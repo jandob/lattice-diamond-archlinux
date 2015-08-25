@@ -1,0 +1,35 @@
+#!/bin/bash
+MAC=00:00:00:00:00:00
+DUMMY_AVAILABLE=false
+ETH0_AVAILABLE=false
+sudo lsmod | grep dummy &>/dev/null && DUMMY_AVAILABLE=true
+ip link show eth0 &>/dev/null && ETH0_AVAILABLE=true
+if $DUMMY_AVAILABLE; then
+    echo dummy available
+fi
+if $ETH0_AVAILABLE; then
+    echo eth0 available
+fi
+if ! $DUMMY_AVAILABLE && $ETH0_AVAILABLE; then
+    echo error, eth0 available but dummy not found
+    exit -1
+fi
+if ! $ETH0_AVAILABLE && $DUMMY_AVAILABLE; then
+    echo error, dummy available but eth0 not found
+    exit -1
+fi
+if $DUMMY_AVAILABLE && $ETH0_AVAILABLE; then
+    echo removing eth0
+    sudo ip link delete eth0 type dummy
+    echo removing dummy
+    sudo rmmod dummy
+fi
+if ! $DUMMY_AVAILABLE && ! $ETH0_AVAILABLE; then
+    echo creating dummy
+    sudo modprobe dummy
+    echo creating eth0
+    sudo ip link set name eth0 dev dummy0
+    echo changing mac
+    sudo ifconfig eth0 hw ether $MAC
+    ip link show eth0
+fi

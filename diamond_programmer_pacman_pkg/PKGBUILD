@@ -1,0 +1,23 @@
+# Maintainer: Janosch Dobler <janosch.dobler@gmx.de>
+pkgname=lattice-diamond-programmer
+pkgver=3.5
+pkgrel=1
+pkgdesc="Lattice Diamond Programmer Standalone"
+arch=('x86_64')
+url='http://www.latticesemi.com/Products/DesignSoftwareAndIP/FPGAandLDS/LatticeDiamond.aspx'
+license=('unknown')
+depends=('')
+makedepends=('')
+options=('!strip' 'docs' 'libtool' 'staticlibs' 'emptydirs')
+source=('programmer_3_5_x64-102-x86_64-linux.rpm')
+md5sums=('acd0205b5271999d23110387536ea557')
+
+package() {
+    install -dm 755 "${pkgdir}/opt"
+    cp -dr --no-preserve=ownership "${srcdir}/usr/local/programmer/${pkgver}_x64" "${pkgdir}/opt/"
+    mv "${pkgdir}/opt/${pkgver}_x64" "${pkgdir}/opt/diamond_programmer"
+
+    # link the executable
+    install -dm 755 "${pkgdir}/usr/bin"
+    ln -s "/opt/diamond_programmer/bin/lin64/programmer" "${pkgdir}/usr/bin/diamond-programmer"
+}

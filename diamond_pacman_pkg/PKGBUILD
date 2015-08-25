@@ -1,0 +1,39 @@
+# Maintainer: Janosch Dobler <janosch.dobler@gmx.de>
+pkgname=lattice-diamond
+pkgver=3.5
+pkgrel=1
+pkgdesc="Lattice Diamond IDE"
+arch=('x86_64')
+url="http://www.latticesemi.com/Products/DesignSoftwareAndIP/FPGAandLDS/LatticeDiamond.aspx"
+license=('unknown')
+depends=('')
+makedepends=('')
+options=("!strip" "docs" "libtool" "staticlibs" "emptydirs")
+source=("diamond_3_5-base_x64-102-x86_64-linux.rpm" 'license.dat')
+md5sums=('27728071a3ad9aded83424711491f24e' 'SKIP')
+
+# compression takes forever so skip it (size ~4G)
+PKGEXT='.pkg.tar'
+
+build() {
+    # extract all tar.gz archives
+    find . -name "*.tar.gz" | while read FILE; do
+        DIR=$(dirname $FILE);
+        echo extracting $FILE
+        tar xzfC $FILE $DIR;
+    done
+    # delete em
+    find . -name "*.tar.gz" -delete
+}
+package() {
+    install -dm 755 "${pkgdir}/opt"
+    cp -dr --no-preserve=ownership "${srcdir}/usr/local/diamond/${pkgver}_x64" "${pkgdir}/opt"
+    mv "${pkgdir}/opt/${pkgver}_x64" "${pkgdir}/opt/diamond"
+
+    # copy the license file
+    install -m 755 ${srcdir}/license.dat "${pkgdir}/opt/diamond/license"
+
+    # link the executable
+    install -dm 755 "${pkgdir}/usr/bin"
+    ln -s "/opt/diamond/bin/lin64/diamond" "${pkgdir}/usr/bin/diamond"
+}

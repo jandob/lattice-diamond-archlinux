@@ -9,7 +9,7 @@ from Lattice using the MAC address of your `eth0`
 of this system does not match the hostid specified in the license file"*.
 If you do not have an eth0 device (probably because of
 [this](http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/) ),
-you can use the script `eth0DummyToggle` wich creates a dummy eth0 device.
+you can use the script `eth0DummyToggle` which creates a dummy eth0 device.
 (The MAC adress of the device can be configured inside the script).
 
 Place `license.dat` and the downloaded `rpm` in the folder with the `PKGBUILD`,

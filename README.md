@@ -34,4 +34,5 @@ order to fix this add the following udev rule (e.g.
 The first line gives the lattice diamond executable access to the usb device,
 the second line disables the standard drivers for the first serial interface.
 After the change reload udev:
+
     sudo udevadm control --reload
